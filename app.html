@@ -8,9 +8,10 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
         integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
         crossorigin="" />
-    <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
+    <script src="https://cdn-webgl.eegeo.com/eegeojs/early_access/latest/eegeo.js"></script>
+    <!-- <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
         integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
-        crossorigin=""></script>
+        crossorigin=""></script> -->
     <style>
         body {
             padding: 0;
@@ -28,7 +29,11 @@
 </head>
 
 <body>
-    <div id="map"></div>
+        <div id="map">
+                <button>Get me to a random location!</button>
+        </div>
+
+    
 
     <script>
         async function initMap() {
@@ -48,7 +53,18 @@
             googleSat.addTo(map);
             map.setView([19.0216, 72.8707], 19);
         }
-        initMap();
+        //initMap();
+
+        var map = L.eeGeo.map("map", "2dbdfee9955af93d96c8c01506002ab2", {
+            center: [-41.2858, 174.78682],
+            zoom: 12
+        });
+        let googleSat = L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+            maxZoom: 20,
+            subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+        });
+        googleSat.addTo(map);
+        map.setView([19.0216, 72.8707], 19);
     </script>
 </body>
 

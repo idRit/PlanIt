@@ -36,14 +36,12 @@
     </section> -->
 
     <script>
-        if (typeof localStorage.name !== 'undefined') {
-            window.location.pathname = '/app.html';
-        }
-        
         function openMain() {
-            console.log('redirecting');
-            window.location.pathname = '/signin.html';
-            // alert('work in progress');
+            if (typeof localStorage.name !== 'undefined') {
+                window.location.pathname = '/signin.html';
+            } else {
+                window.location.pathname = '/app.html';
+            }
         }
     </script>
 </body>

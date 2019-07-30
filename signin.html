@@ -27,7 +27,7 @@
         <div class="header-overlay"></div>
         <div class="header-content" style="margin: 0 auto;">
             <div class="form-style-8">
-                <h2>Login to your account</h2>
+                <h2>Before we begin, tell us a little about yourself!</h2>
                 <div>
                     <input type="text" id="name" placeholder="Full Name" />
                     <input type="email" id="email" placeholder="Email" />
@@ -42,13 +42,9 @@
 
     <script>
         function openMain() {
-            if (typeof localStorage.name !== 'undefined') {
-                window.location.pathname = '/app.html';
-            } else {
-                localStorage.name = document.getElementById('name').value;
-                localStorage.email = document.getElementById('email').value;
-                window.location.pathname = '/app.html';
-            }
+            localStorage.name = document.getElementById('name').value;
+            localStorage.email = document.getElementById('email').value;
+            window.location.pathname = '/app.html';
         }
     </script>
 </body>
