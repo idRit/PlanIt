@@ -17,7 +17,7 @@
             <div class="video-background">
                 <div class="video-foreground">
                     <iframe width="1349" height="488"
-                        src="https://www.youtube.com/embed/y-uYR6evUHA?controls=0&showinfo=0&rel=0&autoplay=1&loop=1&playlist=W0LHTWG-UmQ&vq=hd1080&mute=1"
+                        src="https://www.youtube.com/embed/EWnNQ7H3uzc?controls=0&showinfo=0&rel=0&autoplay=1&loop=1&playlist=W0LHTWG-UmQ&vq=hd1080&mute=1"
                         frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
                         allowfullscreen></iframe>
                 </div>
@@ -37,7 +37,7 @@
 
     <script>
         function openMain() {
-            if (typeof localStorage.name !== 'undefined') {
+            if (typeof localStorage.name === 'undefined') {
                 window.location.pathname = '/signin.html';
             } else {
                 window.location.pathname = '/app.html';

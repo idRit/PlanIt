@@ -14,9 +14,17 @@
     <div id="cesiumContainer" style="width: 100%; height: 100%"></div>
     <script>
         Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI4ZTY2NGNlYi1lMjkxLTQyNzUtYWU2ZS1lM2FmOWI1OTM1YWQiLCJpZCI6MTM5NzYsInNjb3BlcyI6WyJhc3IiLCJnYyJdLCJpYXQiOjE1NjQ1MDE4MjN9.R3BSQ00pi7GEdbNOFcaGvKzlFbC0OabZW92bZBCHZ0c';
-        var viewer = new Cesium.Viewer('cesiumContainer');
+        var viewer = new Cesium.Viewer('cesiumContainer', {
+            animation: false,
+            navigationHelpButton: false,
+            sceneModePicker: false,
+            homeButton: false,
+            geocoder: false,
+            fullscreenButton: false,
+            timeline: false
+        });
 
-        
+
     </script>
 </body>
 

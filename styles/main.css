@@ -87,11 +87,6 @@ body {
 }
 
 .btn {
-    background: #34b3a0;
-    color: #fff;
-    font-size: 1.2rem;
-    padding: 1rem 2rem;
-    text-decoration: none;
     z-index: 3;
 }
 
@@ -123,4 +118,22 @@ body {
         width: 300%;
         left: -100%;
     }
+}
+
+.btn {
+    color: #494949 !important;
+    text-transform: uppercase;
+    text-decoration: none;
+    background: #ffffff;
+    padding: 20px;
+    border: 4px solid #494949 !important;
+    display: inline-block;
+    transition: all 0.4s ease 0s;
+}
+
+.btn:hover {
+    color: #ffffff !important;
+    background: #34b3a0;
+    border-color: #34b3a0 !important;
+    transition: all 0.4s ease 0s;
 }

@@ -5,21 +5,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="styles/main.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
         integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
         crossorigin="" />
-    <script src="https://cdn-webgl.eegeo.com/eegeojs/early_access/latest/eegeo.js"></script>
-    <!-- <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
-        integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
-        crossorigin=""></script> -->
+    <script src="https://cesiumjs.org/releases/1.59/Build/Cesium/Cesium.js"></script>
+    <link href="https://cesiumjs.org/releases/1.59/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+
     <style>
         body {
             padding: 0;
             margin: 0;
+            height: 100%;
+            width: 100%;
         }
 
-        html,
-        body,
+        .content {
+            height: 100vh;
+            width: 100%;
+            display: flex;
+            /* justify-content: center; */
+        }
+
+        .info {
+            height: 100%;
+            width: 40%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
         #map {
             height: 100%;
             width: 100%;
@@ -28,43 +43,68 @@
     <title>PlanIt Earth</title>
 </head>
 
-<body>
-        <div id="map">
-                <button>Get me to a random location!</button>
+<body onload="initGlobe()">
+    <div class="content">
+        <div class="info">
+            <div class="stuff">
+                <button class="btn" style="border: 2px solid #00AA66;" onclick="getCity()">
+                    Get me to a random location!
+                </button>
+            </div>
         </div>
+        <!-- <div id="map"></div> -->
+        <div id="cesiumContainer" style="width: 100%; height: 100%"></div>
+    </div>
 
-    
-
+    <script src="scripts/fetchCountries.js"></script>
+    <script src="scripts/geocode.js"></script>
     <script>
+        var map;
+        var marker;
+        var viewer;
+
         async function initMap() {
-            var map = L.map('map').setView([-41.2858, 174.78682], 14);
+            map = L.map('map').setView([-41.2858, 174.78682], 14);
             mapLink =
                 '<a href="http://openstreetmap.org">OpenStreetMap</a>';
-            googleSat = L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
-                maxZoom: 20,
-                subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+            //let mt = "https://api.maptiler.com/tiles/satellite-mediumres-2018/{z}/{x}/{y}.jpg?key=j2rAx36UryiEmF0DPq4q";
+            let tile = "https://api.maptiler.com/tiles/satellite/{z}/{x}/{y}.jpg?key=j2rAx36UryiEmF0DPq4q";
+            mapTiler = L.tileLayer(tile, {
+                tileSize: 512,
+                zoomOffset: -1,
+                minZoom: 2,
+                attribution: '<a href="https://www.maptiler.com/copyright/" target="_blank">© MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">© OpenStreetMap contributors</a>',
+                crossOrigin: true
             });
-            // L.tileLayer(
-            //     'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            //         attribution: '&copy; ' + mapLink + ' Contributors',
-            //         maxZoom: 18,
-            //     }).addTo(map);
 
-            googleSat.addTo(map);
-            map.setView([19.0216, 72.8707], 19);
+            mapTiler.addTo(map);
+            map.setView([19.0216, 72.8707], 2);
+        }
+
+        async function initGlobe() {
+            Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI4ZTY2NGNlYi1lMjkxLTQyNzUtYWU2ZS1lM2FmOWI1OTM1YWQiLCJpZCI6MTM5NzYsInNjb3BlcyI6WyJhc3IiLCJnYyJdLCJpYXQiOjE1NjQ1MDE4MjN9.R3BSQ00pi7GEdbNOFcaGvKzlFbC0OabZW92bZBCHZ0c';
+            viewer = new Cesium.Viewer('cesiumContainer', {
+                animation: false,
+                navigationHelpButton: false,
+                sceneModePicker: false,
+                homeButton: false,
+                geocoder: false,
+                fullscreenButton: false,
+                timeline: false
+            });
+        }
+
+        async function getCity() {
+            let city = await getRandomCity();
+            let l = await geocodeCity(city);
+            console.log(l);
+            // marker = L.marker([latlng.lat, latlng.long])
+            // marker.addTo(map);
+            viewer.camera.setView({
+                destination: Cesium.Cartesian3.fromDegrees(l.lat, l.long)
+            });
         }
         //initMap();
-
-        var map = L.eeGeo.map("map", "2dbdfee9955af93d96c8c01506002ab2", {
-            center: [-41.2858, 174.78682],
-            zoom: 12
-        });
-        let googleSat = L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
-            maxZoom: 20,
-            subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
-        });
-        googleSat.addTo(map);
-        map.setView([19.0216, 72.8707], 19);
     </script>
 </body>
 

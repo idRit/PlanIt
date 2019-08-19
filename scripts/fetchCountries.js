@@ -1,5 +1,5 @@
-const fetch = require('node-fetch');
-const cityAndCrimeRate = require('./crimeRates');
+//const fetch = require('node-fetch');
+//const cityAndCrimeRate = require('./crimeRates');
 
 async function getAllCountries() {
     let res = await fetch('https://raw.githubusercontent.com/meMo-Minsk/all-countries-and-cities-json/master/countries.json');
@@ -7,7 +7,7 @@ async function getAllCountries() {
     return countryJson;
 }
 
-async function run() {
+async function getRandomCity() {
     let countries = await getAllCountries();
     let countryCount = count(countries);
 
@@ -26,20 +26,8 @@ async function run() {
     let cities = countries[index[randomNumber]];
     let randomCity = cities[getRandomInt(cities.length)];
 
-    let cityDetails = {
-        city: randomCity,
-        crimeRate: -1
-    };
-
-    await cityAndCrimeRate.forEach((city) => {
-        if (randomCity === city[0]) {
-            cityDetails.crimeRate = city[1];
-        }
-    });
-
-    console.log(cityDetails);
-
-    //console.log(randomCity);
+    console.log(randomCity);
+    return (randomCity);
 }
 
 
@@ -50,4 +38,4 @@ function getRandomInt(max) {
 
 function count(obj) { return Object.keys(obj).length; }
 
-run();
+//run();

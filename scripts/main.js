@@ -16,3 +16,4 @@ function validate() {
     localStorage.email = document.getElementById('email').value;
     window.location.pathname = '/app.html';
 }
+
