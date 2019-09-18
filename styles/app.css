@@ -1,0 +1,40 @@
+body {
+    padding: 0;
+    margin: 0;
+    height: 100vh;
+    width: 100%;
+}
+
+.content {
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    /* justify-content: center; */
+}
+
+.info {
+    height: 100vh;
+    width: 40%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#map {
+    height: 100%;
+    width: 100%;
+}
+
+.stuff {
+    padding: 10px;
+}
+
+@media (max-width: 690px) {
+    .content {
+        flex-direction: column-reverse;
+    }
+    .info {
+        height: 30vh;
+        width: 100%;
+    }
+}

@@ -26,8 +26,13 @@ async function getRandomCity() {
     let cities = countries[index[randomNumber]];
     let randomCity = cities[getRandomInt(cities.length)];
 
+    console.log(index[randomNumber]);
     console.log(randomCity);
-    return (randomCity);
+
+    return {
+        city: randomCity,
+        country: index[randomNumber]        
+    }
 }
 
 

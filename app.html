@@ -6,50 +6,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/app.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
         integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
         crossorigin="" />
     <script src="https://cesiumjs.org/releases/1.59/Build/Cesium/Cesium.js"></script>
     <link href="https://cesiumjs.org/releases/1.59/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
-
-    <style>
-        body {
-            padding: 0;
-            margin: 0;
-            height: 100%;
-            width: 100%;
-        }
-
-        .content {
-            height: 100vh;
-            width: 100%;
-            display: flex;
-            /* justify-content: center; */
-        }
-
-        .info {
-            height: 100%;
-            width: 40%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        #map {
-            height: 100%;
-            width: 100%;
-        }
-    </style>
     <title>PlanIt Earth</title>
 </head>
 
 <body onload="initGlobe()">
+
     <div class="content">
         <div class="info">
             <div class="stuff">
-                <button class="btn" style="border: 2px solid #00AA66;" onclick="getCity()">
+                <button class="btn" id="grl" style="border: 2px solid #00AA66;" onclick="getCity()">
                     Get me to a random location!
                 </button>
+            </div>
+            <div class="pane" style="display: none; padding: 10px;">
+                <p id="placename"></p>
+                <img id="ci" src="" alt="city image" width="30%" height="30%">
             </div>
         </div>
         <!-- <div id="map"></div> -->
@@ -63,24 +40,6 @@
         var marker;
         var viewer;
 
-        async function initMap() {
-            map = L.map('map').setView([-41.2858, 174.78682], 14);
-            mapLink =
-                '<a href="http://openstreetmap.org">OpenStreetMap</a>';
-            //let mt = "https://api.maptiler.com/tiles/satellite-mediumres-2018/{z}/{x}/{y}.jpg?key=j2rAx36UryiEmF0DPq4q";
-            let tile = "https://api.maptiler.com/tiles/satellite/{z}/{x}/{y}.jpg?key=j2rAx36UryiEmF0DPq4q";
-            mapTiler = L.tileLayer(tile, {
-                tileSize: 512,
-                zoomOffset: -1,
-                minZoom: 2,
-                attribution: '<a href="https://www.maptiler.com/copyright/" target="_blank">© MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">© OpenStreetMap contributors</a>',
-                crossOrigin: true
-            });
-
-            mapTiler.addTo(map);
-            map.setView([19.0216, 72.8707], 2);
-        }
-
         async function initGlobe() {
             Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI4ZTY2NGNlYi1lMjkxLTQyNzUtYWU2ZS1lM2FmOWI1OTM1YWQiLCJpZCI6MTM5NzYsInNjb3BlcyI6WyJhc3IiLCJnYyJdLCJpYXQiOjE1NjQ1MDE4MjN9.R3BSQ00pi7GEdbNOFcaGvKzlFbC0OabZW92bZBCHZ0c';
             viewer = new Cesium.Viewer('cesiumContainer', {
@@ -92,19 +51,40 @@
                 fullscreenButton: false,
                 timeline: false
             });
+            var layer = viewer.imageryLayers.addImageryProvider(
+                new Cesium.IonImageryProvider({ assetId: 3 })
+            );
+            document.querySelector('.info').scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
         }
 
         async function getCity() {
-            let city = await getRandomCity();
-            let l = await geocodeCity(city);
+            let place = await getRandomCity();
+            let l = await geocodeCity(place.country, place.city);
             console.log(l);
-            // marker = L.marker([latlng.lat, latlng.long])
-            // marker.addTo(map);
-            viewer.camera.setView({
-                destination: Cesium.Cartesian3.fromDegrees(l.lat, l.long)
+
+            let scene = viewer.scene;
+            let height = 50000;
+
+            setTimeout(() => {
+                viewer.camera.flyTo({
+                    destination: Cesium.Cartesian3.fromDegrees(l.long, l.lat, height),
+                    maximumHeight: height
+                });
             });
+
+            document.querySelector('.stuff').style.display = "none";
+            document.querySelector('.pane').style.display = "flex";
+            document.querySelector('.info').style.display = "block";
+
+            await prepareRightPane(place, l);
         }
-        //initMap();
+
+        async function prepareRightPane(place, l) {
+            document.querySelector('#placename').innerHTML = place.country + ", " + place.city;
+            let res = await (await fetch(`https://api.teleport.org/api/urban_areas/slug:${place.country}/images/`)).json();
+            console.log(res);
+            document.querySelector('#ci').src = res.photos[0].image.mobile;
+        }
     </script>
 </body>
 
