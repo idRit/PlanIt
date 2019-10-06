@@ -9,16 +9,17 @@
     <link rel="stylesheet" href="styles/card.css">
     <script src="https://www.youtube.com/iframe_api"></script>
     <script src="scripts/main.js"></script>
+    <script src="scripts/geocode.js"></script>
     <title>PlanIt Earth</title>
 </head>
 
-<body>
+<body onload="getPos()">
     <header class="v-header container">
         <div class="fullscreen-video-wrap">
             <div class="video-background">
                 <div class="video-foreground">
                     <iframe width="1349" height="488"
-                        src="https://www.youtube.com/embed/y-uYR6evUHA?controls=0&showinfo=0&rel=0&autoplay=1&loop=1&playlist=W0LHTWG-UmQ&vq=hd1080&mute=1"
+                        src="https://www.youtube.com/embed/XBPjVzSoepo?controls=0&showinfo=0&rel=0&autoplay=1&loop=1&playlist=W0LHTWG-UmQ&vq=hd1080&mute=1"
                         frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
                         allowfullscreen></iframe>
                 </div>
@@ -45,6 +46,16 @@
             localStorage.name = document.getElementById('name').value;
             localStorage.email = document.getElementById('email').value;
             window.location.pathname = '/app.html';
+        }
+
+        function getPos() {
+            navigator.geolocation.getCurrentPosition(async (position) => {
+                let lat = position.coords.latitude;
+                let long = position.coords.longitude;
+                let obj = await reverseGeoCode(lat, long);
+                console.log(obj.address.city);
+                localStorage.city = obj.address.city;
+            });
         }
     </script>
 </body>

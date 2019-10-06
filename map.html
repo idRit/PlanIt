@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<title>
+</title>
+
+<head>
+</head>
+
+<body>
+    <p>HTML5 GEOLOCATION</p>
+
+    <!-- <a href="#" id="get_location">Get Location</a> -->
+
+    <button id="get_location" onclick="getLoc()">Get Location</button>
+    <div id="map">
+        <iframe id="google_map" width="425" height="350" frameborder="0" style="border:0"
+            src="https://www.google.com/maps/embed/v1/view?zoom=9&center=24.8615,67.0099&key=AIzaSyAgiV9XkktBAHcfc1XIkLcUngBuSnxmk1o"></iframe>
+    </div>
+
+
+    <script>
+        $.ajax({
+            type: 'POST',
+            url: 'localhost/database.php',
+            async: true,
+            data: {
+                'lat': lat,
+                'lang': lang
+            },
+            success: function (response) {
+                console.log(response);
+            }
+        });
+
+        function getLoc() {
+            var c = function (pos) {
+                var lat = pos.coords.latitude,
+                    long = pos.coords.longitude,
+                    coords = lat + ', ' + long;
+
+                document.getElementById('google_map').setAttribute('src', 'https://maps.google.co.uk/?q=' + coords + '&z=15&output=embed');
+                alert("latitude= " + lat + "\nlongitude= " + long);
+
+            }//end of function c
+
+            document.getElementById('get_location').onclick = function () {
+
+                navigator.geolocation.getCurrentPosition(c);
+                return false;
+            }
+        }
+
+
+    </script>
+
+
+
+
+</body>
+
+</html>

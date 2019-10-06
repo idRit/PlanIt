@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="styles/main.css">
     <link rel="stylesheet" href="styles/app.css">
+    <link rel="manifest" href="/manifest.json">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
         integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
         crossorigin="" />
@@ -16,7 +17,6 @@
 </head>
 
 <body onload="initGlobe()">
-
     <div class="content">
         <div class="info">
             <div class="stuff">
@@ -25,22 +25,54 @@
                 </button>
             </div>
             <div class="pane" style="display: none; padding: 10px;">
-                <p id="placename"></p>
-                <img id="ci" src="" alt="city image" width="30%" height="30%">
+                <h2 id="placename" style="text-align: center;"></h2>
+                <br>
+                <img id="cimg" src="" alt="country image" height="100%">
+                <br>
+                <br>
+                <div class="detailsContainer">
+                    <div class="paramsContainer"></div>
+                    <div class="contContainer"></div>
+                    <template>
+                        <div class="params"></div>
+                        <div class="cont"></div>
+                    </template>
+                    <br>
+                </div>
+                <br>
+                <br>
+                <p id="sc" style="text-align: center;">Scroll to top to look discover the place!</p>
+                <div style="display: flex; justify-content: space-around;">
+                    <button class="btn" id="grl1" style="border: 2px solid #00AA66;" onclick="location.reload()">
+                        Reload
+                    </button>
+                    <button class="btn" id="grl" style="border: 2px solid #00AA66;" onclick="wiki()">
+                        wiki travels
+                    </button>
+                </div>
             </div>
         </div>
-        <!-- <div id="map"></div> -->
+
         <div id="cesiumContainer" style="width: 100%; height: 100%"></div>
     </div>
 
     <script src="scripts/fetchCountries.js"></script>
     <script src="scripts/geocode.js"></script>
+    <script src="scripts/countryDetails.js"></script>
     <script>
         var map;
         var marker;
         var viewer;
 
+        var countryy = "";
+
         async function initGlobe() {
+            if (typeof localStorage.firstrun === 'undefined') {
+                alert("If you want to choose another location then please refresh the page. This message is just a one time message and won't appear again!");
+                localStorage.firstrun = true;
+            }
+            reqFS();
+
             Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI4ZTY2NGNlYi1lMjkxLTQyNzUtYWU2ZS1lM2FmOWI1OTM1YWQiLCJpZCI6MTM5NzYsInNjb3BlcyI6WyJhc3IiLCJnYyJdLCJpYXQiOjE1NjQ1MDE4MjN9.R3BSQ00pi7GEdbNOFcaGvKzlFbC0OabZW92bZBCHZ0c';
             viewer = new Cesium.Viewer('cesiumContainer', {
                 animation: false,
@@ -55,6 +87,20 @@
                 new Cesium.IonImageryProvider({ assetId: 3 })
             );
             document.querySelector('.info').scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
+        }
+
+        function reqFS() {
+            var doc = window.document;
+            var docEl = doc.documentElement;
+
+            var requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen;
+
+            if (!doc.fullscreenElement && !doc.mozFullScreenElement && !doc.webkitFullscreenElement && !doc.msFullscreenElement) {
+                requestFullScreen.call(docEl);
+            }
+            else {
+                cancelFullScreen.call(doc);
+            }
         }
 
         async function getCity() {
@@ -80,10 +126,37 @@
         }
 
         async function prepareRightPane(place, l) {
-            document.querySelector('#placename').innerHTML = place.country + ", " + place.city;
-            let res = await (await fetch(`https://api.teleport.org/api/urban_areas/slug:${place.country}/images/`)).json();
-            console.log(res);
-            document.querySelector('#ci').src = res.photos[0].image.mobile;
+            document.querySelector('#placename').innerHTML = "Random Country : " + place.country;
+            countryy = place.country;
+            let x = await getDetails(place.country);
+            let details = x.details;
+            let image = await getImage(place.country);
+            console.log(image.image);
+            document.querySelector('#cimg').src = image.image;
+
+            console.log(details);
+            showDetails(details);
+            //document.querySelector('#population').innerHTML = "population: " + await getDetails(place.country)['Population'];
+        }
+
+        function wiki() {
+            var win = window.open(`https://wikitravel.org/en/${countryy}`, '_blank');
+            win.focus();
+        }
+
+        function showDetails(details) {
+            let temp = document.getElementsByTagName("template")[0];
+            let params = temp.content.querySelector(".params");
+            let cont = temp.content.querySelector('.cont');
+            let keys = Object.keys(details);
+            keys.forEach(key => {
+                let a = document.importNode(params, true);
+                a.textContent = key + ': ';
+                let b = document.importNode(cont, true);
+                b.textContent = details[key];
+                document.querySelector('.paramsContainer').appendChild(a);
+                document.querySelector('.contContainer').appendChild(b);
+            });
         }
     </script>
 </body>

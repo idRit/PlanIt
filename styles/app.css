@@ -18,6 +18,13 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow-y: auto;
+    /* background-color: #f8fcd2; */
+}
+
+.pane {
+    justify-content: center;
+    flex-direction: column; 
 }
 
 #map {
@@ -29,12 +36,34 @@ body {
     padding: 10px;
 }
 
+#sc {
+    display: none;
+}
+
+.c {
+    display: flex;
+    flex-direction: row;
+    /* justify-content: center; */
+}
+
+.params {
+    padding-right: 10px;
+}
+
+.detailsContainer {
+    display: flex;
+}
+
 @media (max-width: 690px) {
     .content {
         flex-direction: column-reverse;
     }
     .info {
-        height: 30vh;
+        height: 90vh;
         width: 100%;
+        overflow-y: none;
+    }
+    #sc {
+        display: block;
     }
 }
