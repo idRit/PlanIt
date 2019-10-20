@@ -2,7 +2,8 @@
 //const cityAndCrimeRate = require('./crimeRates');
 
 async function getAllCountries() {
-    let res = await fetch('https://raw.githubusercontent.com/meMo-Minsk/all-countries-and-cities-json/master/countries.json');
+    //let res = await fetch('https://raw.githubusercontent.com/russ666/all-countries-and-cities-json/6ee538beca8914133259b401ba47a550313e8984/countries.json');
+    let res = await fetch('scripts/countries.json');
     let countryJson = res.json();
     return countryJson;
 }
