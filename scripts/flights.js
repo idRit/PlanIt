@@ -12,4 +12,5 @@ async function run() {
     console.log(res);
 }
 
-run();
+//Dosen't work
+//run();

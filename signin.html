@@ -53,8 +53,9 @@
                 let lat = position.coords.latitude;
                 let long = position.coords.longitude;
                 let obj = await reverseGeoCode(lat, long);
+                console.log(obj.address);
                 console.log(obj.address.city);
-                localStorage.city = obj.address.city;
+                localStorage.country = obj.address.country;
             });
         }
     </script>
