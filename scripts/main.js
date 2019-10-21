@@ -63,7 +63,7 @@ function reqFS() {
 async function mail() {
     document.querySelector('#placename').style['text-align'] = "none";
     let body = document.querySelector('.innerpane');
-    body = `<!DOCTYPE html><div>${body.innerHTML}<a href="https://wikitravel.org/en/${countryy}">Visit Wiki for More Information!</a></div>`;
+    body = `<!DOCTYPE html><div>${body.innerHTML}<a href="https://wikitravel.org/en/${countryy}">Visit Wiki for More Information!</a><br><a href="https://planitearth.netlify.com/contact.html">Contact us!</a></div>`;
     document.querySelector('#placename').style['text-align'] = "center";
     console.log(body);
     const url = 'https://pscr.herokuapp.com/api/sendMail';
