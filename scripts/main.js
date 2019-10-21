@@ -65,7 +65,7 @@ async function mail() {
     let body = document.querySelector('.innerpane');
     body = `<!DOCTYPE html><div>${body.innerHTML}<a href="https://wikitravel.org/en/${countryy}">Visit Wiki for More Information!</a><br><a href="https://planitearth.netlify.com/contact.html">Contact us!</a></div>`;
     document.querySelector('#placename').style.textAlign = "center";
-    console.log(body);
+    //console.log(body);
     const url = 'https://pscr.herokuapp.com/api/sendMail';
     const data = { msg: body, mailTo: localStorage.email };
 
@@ -78,10 +78,10 @@ async function mail() {
             }
         });
         const json = await response.json();
-        console.log('Success:', JSON.stringify(json));
+        //console.log('Success:', JSON.stringify(json));
         alert('Mail sent!');
     } catch (error) {
-        console.error('Error:', error);
+        //console.error('Error:', error);
         alert('Some error!');
     }
 
@@ -94,7 +94,7 @@ async function getCity() {
 
     let place = await getRandomCity();
     let l = await geocodeCity(place.country, place.city);
-    console.log(l);
+    //console.log(l);
 
     let scene = viewer.scene;
     let height = 50000;
@@ -121,7 +121,7 @@ async function prepareRightPane(place, l) {
     document.querySelector('.pane').style.display = "flex";
     document.querySelector('.info').style.display = "block";
 
-    console.log(details);
+    //console.log(details);
     showDetails(details);
     //document.querySelector('#population').innerHTML = "population: " + await getDetails(place.country)['Population'];
 }
@@ -147,5 +147,6 @@ function showDetails(details) {
 }
 
 async function storeDetails(src, dst) {
-    
+    let res = await (await fetch(`https://planit-back.000webhostapp.com/store.php?source=${src}&dst=${dst}`)).text();
+    console.log(res);
 }
