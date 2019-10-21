@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
+        integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+        crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
+        integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
+        crossorigin=""></script>
+    <script src="../dist/leaflet-roughcanvas.js"></script>
+    <style>
+        #mapid {
+            height: 97vh;
+        }
+    </style>
+    <title>Visualiser</title>
+</head>
+
+<body onload="getAllCountryRelations()">
+    <div class="container">
+        <div id="mapid"></div>
+    </div>
+
+    <script src="scripts/geocode.js"></script>
+    <script>
+        var mymap = L.map('mapid').setView([0, 0], 2);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            maxZoom: 19,
+        }).addTo(mymap);
+
+        var relations;
+        async function getAllCountryRelations() {
+            let res = await (await fetch('https://planit-back.000webhostapp.com/all-rel.php')).text();
+            res = JSON.parse(res.replace(/'/g, "\"").replace(/,]/g, ']'));
+            relations = res;
+            console.log(relations);
+            drawPaths();
+        }
+
+        async function drawPaths() {
+            let src;
+            await relations.forEach(async el => {
+                let paths = [];
+                paths.push(await geocodeCountry(el.source));
+                paths.push(await geocodeCountry(el.destination));
+                if (typeof src !== 'undefined') {
+                    src = el.source;
+                }
+                var polyline = L.polyline(paths, {
+                    color: 'red',
+                    weight: 3,
+                    opacity: 0.5,
+                    smoothFactor: 1
+                }).addTo(mymap);
+
+            });
+        }
+    </script>
+</body>
+
+</html>
