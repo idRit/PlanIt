@@ -78,10 +78,8 @@ async function mail() {
             }
         });
         const json = await response.json();
-        //console.log('Success:', JSON.stringify(json));
         alert('Mail sent!');
     } catch (error) {
-        //console.error('Error:', error);
         alert('Some error!');
     }
 
